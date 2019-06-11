@@ -8,35 +8,34 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Node : NSObject
-
-@property (nonatomic, assign) NSNumber *value;
-@property (nonatomic, strong) Node *next;
-
-@end
+typedef struct Node {
+    int value;
+    struct Node *next;
+}Node;
 
 void logLink(Node *head) {
-    while (head) {
-        NSLog(@"%@",head.value);
-        head = head.next;
+    while (head != NULL) {
+        NSLog(@"%d",head->value);
+        head = head->next;
     }
 }
 
 void deleteDuplicateNode(Node *head) {
-    if (!head.next.value || !head) {
+    if (head == nil || !head->next->value) {
         return;
     }
     Node *resultHead = head;
     Node *p = resultHead;
-    head = head.next;
-    while (head) {
-        if (p.value.integerValue != head.value.integerValue) {
-            p.next = head;
-            p = p.next;
-            head = head.next;
+    head = head->next;
+    while (head != NULL) {
+        if (p->value != head->value) {
+            p->next = head;
+            p = p->next;
+         
         }
+        head = head->next;
     }
-    p.next = nil;
+    p->next = NULL;
     logLink(resultHead);
 }
 
@@ -45,10 +44,21 @@ void deleteDuplicateNode(Node *head) {
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
-        NSArray *array = @[@2,@3,@4,@2,@3,@4];
-        for (NSInteger i = 0; i < array.count; i++) {
-            
+        int array[8] = {2,3,3,3,4,4,4,5};
+        Node *pre = (Node *)malloc(sizeof(Node));
+        Node *head = (Node *)malloc(sizeof(Node));
+        for (NSInteger i = 0; i < 8; i++) {
+            Node *node = (Node *)malloc(sizeof(node));
+            node->value = array[i];
+            pre->next = node;
+            pre = node;
+            if (!i) {
+                head = pre;
+            }
         }
+        pre->next = NULL;
+        
+        deleteDuplicateNode(head);
         NSLog(@"Hello, World!");
     }
     return 0;
