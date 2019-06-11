@@ -27,7 +27,7 @@ void deleteDuplicateNode(Node *head) {
     Node *resultHead = head;
     Node *p = resultHead;
     head = head->next;
-    while (head != NULL) {
+    while (head != nil) {
         if (p->value != head->value) {
             p->next = head;
             p = p->next;
@@ -39,6 +39,24 @@ void deleteDuplicateNode(Node *head) {
     logLink(resultHead);
 }
 
+
+void completeDeleteDuplicateNode(Node *head) {
+    if (head == nil || !head->next->value) {
+        return;
+    }
+   
+    Node *resultHead = head;
+    Node *p = resultHead;
+    while (head != nil && head->next != NULL) {
+        if (head->value != head->next->value) {
+            p->next = head->next;
+            p = p->next;
+        }
+        head = head->next;
+    }
+    p->next = NULL;
+    logLink(resultHead);
+}
 
 
 int main(int argc, const char * argv[]) {
@@ -58,7 +76,8 @@ int main(int argc, const char * argv[]) {
         }
         pre->next = NULL;
         
-        deleteDuplicateNode(head);
+//        deleteDuplicateNode(head);
+        completeDeleteDuplicateNode(head);
         NSLog(@"Hello, World!");
     }
     return 0;
