@@ -108,6 +108,87 @@ void mergeTwoSortedList(Node *head1, Node *head2) {
     logLink(resultHead);
 }
 
+void addTwoNumbers(Node *head1,Node *head2) {
+    if (head1 == NULL && head2 == NULL) {
+        return;
+    }
+    Node *resultHead = NULL;
+    Node *p = NULL;
+    BOOL needCarry = NO;
+    while (head1 != NULL && head2 != NULL) {
+        if (p == NULL) {
+            p = head1;
+            p->value = head1->value+head2->value;
+            if (p->value>=10) {
+                p->value = p->value-10;
+                needCarry = YES;
+            }else {
+                needCarry = NO;
+            }
+            resultHead = p;
+        } else {
+            p->next->value = head1->value+head2->value+(needCarry?1:0);
+            if (p->next->value>=10) {
+                p->next->value = p->next->value-10;
+                needCarry = YES;
+            } else {
+                needCarry = NO;
+            }
+            p = p->next;
+        }
+        head2 = head2->next;
+        head1 = head1->next;
+    }
+    if (head1 == NULL) {
+        p->next = head2;
+        while (head2 != NULL && head2->next != NULL) {
+            p->next->value = head2->value+(needCarry?1:0);
+            if (p->next->value >= 10) {
+                p->next->value = p->next->value-10;
+                needCarry = YES;
+            } else{
+                needCarry = NO;
+            }
+            head2 = head2->next;
+        }
+        //此时已经是最后一个节点了
+        
+        head2->value = head2->value+(needCarry?1:0);
+        if (head2->value>=10) {
+            head2->value = head2->value-10;
+            head2->next = (Node *)malloc(sizeof(Node));
+            head2->next->value = 1;
+            head2->next->next = NULL;
+        }
+        
+    }
+    if (head2 == NULL) {
+        p->next = head1;
+        while (head1 != NULL && head1->next != NULL) {
+            p->next->value = head1->value+(needCarry?1:0);
+            if (p->next->value >= 10) {
+                p->next->value = p->next->value-10;
+                needCarry = YES;
+            } else {
+                needCarry = NO;
+            }
+            head1 = head1->next;
+        }
+        //此时已经是最后一个节点了
+        
+        head1->value = head1->value+(needCarry?1:0);
+        if (head1->value>=10) {
+            head1->value = head1->value-10;
+            head1->next = (Node *)malloc(sizeof(Node));
+            head1->next->value = 1;
+            head1->next->next = NULL;
+        }
+    }
+   p = p->next;
+ 
+    logLink(resultHead);
+}
+
 Node *createList(int array[],int len) {
     Node *pre = (Node *)malloc(sizeof(Node));
     Node *head = (Node *)malloc(sizeof(Node));
@@ -127,14 +208,15 @@ Node *createList(int array[],int len) {
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
-        int array[4] = {2,3,5,6};
-        int arraya[3] = {4,7,17};
-        Node *head = createList(array,4);
-        Node *head2 = createList(arraya,3);
+        int array[5] = {2,3,5,6,9};
+        int arraya[4] = {4,7,7,7};
+        Node *head = createList(array,5);
+        Node *head2 = createList(arraya,4);
         
 //        deleteDuplicateNode(head);
 //        completeDeleteDuplicateNode(head);
-        mergeTwoSortedList(head, head2);
+//        mergeTwoSortedList(head, head2);
+        addTwoNumbers(head, head2);
         NSLog(@"Hello, World!");
     }
     return 0;
