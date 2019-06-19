@@ -45,39 +45,96 @@ void completeDeleteDuplicateNode(Node *head) {
         return;
     }
    
-    Node *resultHead = head;
-    Node *p = resultHead;
-    while (head != nil && head->next != NULL) {
-        if (head->value != head->next->value) {
-            p->next = head->next;
-            p = p->next;
+    Node *resultHead = NULL;//记录结果链表的头节点
+    Node *p = NULL;//记录结果链表的尾节点
+    Node *last_repeat = NULL;//记录上次重复的节点位置
+    
+    while (head != NULL) {
+        //如果有下个节点并且不等于下个节点或者尾节点
+        if ((head->next && head->value != head->next->value) || head->next == NULL) {
+            //上次重复的节点为空，或者上次重复的节点跟现在的节点值不同
+            if (last_repeat == NULL || last_repeat->value != head->value) {
+                if (p == NULL) {
+                    resultHead = head;
+                    p = resultHead;
+                } else {
+                    //使其永远指向结果链表的尾节点
+                    p->next = head;
+                    p = p->next;
+                }
+            }
+        } else {
+            last_repeat = head;
         }
         head = head->next;
     }
-    p->next = NULL;
+    
+    if (p) {
+        p->next = NULL;
+    }
     logLink(resultHead);
 }
 
+void mergeTwoSortedList(Node *head1, Node *head2) {
+    if (head1 == NULL && head2 == NULL) {
+        return;
+    }
+    Node *resultHead = NULL;
+    Node *p = NULL;
+    if (head2->value < head1->value) {
+        p = head2;
+        head2 = head2->next;
+    } else {
+        p = head1;
+        head1 = head1->next;
+    }
+    resultHead = p;
+    while (head1 != NULL && head2 != NULL) {
+        if (head1->value < head2->value) {
+            p->next = head1;
+            head1 = head1->next;
+        } else {
+            p->next = head2;
+            head2 = head2->next;
+        }
+        p = p->next;
+    }
+    
+    if (head1 == NULL) {
+        p->next = head2;
+    } else {
+        p->next = head1;
+    }
+    logLink(resultHead);
+}
+
+Node *createList(int array[],int len) {
+    Node *pre = (Node *)malloc(sizeof(Node));
+    Node *head = (Node *)malloc(sizeof(Node));
+    for (NSInteger i = 0; i < len; i++) {
+        Node *node = (Node *)malloc(sizeof(node));
+        node->value = array[i];
+        pre->next = node;
+        pre = node;
+        if (!i) {
+            head = pre;
+        }
+    }
+    pre->next = NULL;
+    return head;
+}
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
-        int array[8] = {2,3,3,3,4,4,4,5};
-        Node *pre = (Node *)malloc(sizeof(Node));
-        Node *head = (Node *)malloc(sizeof(Node));
-        for (NSInteger i = 0; i < 8; i++) {
-            Node *node = (Node *)malloc(sizeof(node));
-            node->value = array[i];
-            pre->next = node;
-            pre = node;
-            if (!i) {
-                head = pre;
-            }
-        }
-        pre->next = NULL;
+        int array[4] = {2,3,5,6};
+        int arraya[3] = {4,7,17};
+        Node *head = createList(array,4);
+        Node *head2 = createList(arraya,3);
         
 //        deleteDuplicateNode(head);
-        completeDeleteDuplicateNode(head);
+//        completeDeleteDuplicateNode(head);
+        mergeTwoSortedList(head, head2);
         NSLog(@"Hello, World!");
     }
     return 0;
