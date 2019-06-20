@@ -189,6 +189,26 @@ void addTwoNumbers(Node *head1,Node *head2) {
     logLink(resultHead);
 }
 
+
+void reverseLinkList(Node *head) {
+    Node *pre = NULL;
+    Node *cur = head;
+    while (cur != NULL) {
+        Node *curTmp = cur->next;
+        cur->next = pre;
+        pre = cur;
+        cur = curTmp;
+       
+    }
+    
+    
+    logLink(pre);
+   
+}
+
+
+
+
 Node *createList(int array[],int len) {
     Node *pre = (Node *)malloc(sizeof(Node));
     Node *head = (Node *)malloc(sizeof(Node));
@@ -208,15 +228,16 @@ Node *createList(int array[],int len) {
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
-        int array[5] = {2,3,5,6,9};
-        int arraya[4] = {4,7,7,7};
-        Node *head = createList(array,5);
-        Node *head2 = createList(arraya,4);
+        int array[4] = {2,3,5,6};
+//        int arraya[4] = {4,7,7,7};
+        Node *head = createList(array,4);
+//        Node *head2 = createList(arraya,4);
         
 //        deleteDuplicateNode(head);
 //        completeDeleteDuplicateNode(head);
 //        mergeTwoSortedList(head, head2);
-        addTwoNumbers(head, head2);
+//        addTwoNumbers(head, head2);
+        reverseLinkList(head);
         NSLog(@"Hello, World!");
     }
     return 0;
