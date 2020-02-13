@@ -28,6 +28,7 @@ public class TreeNode {
      }
  }
 
+
 class Solution {
     func strStr(_ haystack: String, _ needle: String) -> Int {
 
@@ -450,22 +451,45 @@ class Solution {
         } else {
             return true
         }
+    }
     func singleNumber(_ nums: [Int]) -> Int {
         
-        if nums.count == 1 {
-            return nums.first!
+        var a = 0
+        for n in 0..<nums.count {
+          a = a ^ nums[n]
         }
-        var first = nums[0]
-        for n in 1..<nums.count {
-            if  {
-                <#code#>
-            }
-        }
+        return a
     }
       
        
-    }
+    
 
+}
+
+class MinStack {
+
+    private var stack : [Int]
+    private var min : Int
+    /** initialize your data structure here. */
+    init() {
+        return self
+    }
+    
+    func push(_ x: Int) {
+        
+    }
+    
+    func pop() {
+        
+    }
+    
+    func top() -> Int {
+        
+    }
+    
+    func getMin() -> Int {
+        
+    }
 }
 
 extension String {
