@@ -461,35 +461,126 @@ class Solution {
         return a
     }
       
-       
+    func twoSum(_ numbers: [Int], _ target: Int) -> [Int] {
+        var newNums = [Int:Int]()
+        for n in 0..<numbers.count {
+            let val = numbers[n]
+            newNums[val] = n
+        }
+        for n in 0..<numbers.count {
+           let val = target-numbers[n]
+            if newNums[val] != nil {
+                return newNums[val]!>n ? [n+1,newNums[val]!+1] : [newNums[val]!+1,n+1]
+            }
+        }
+        return []
+    }
+    func convertToTitle(_ n: Int) -> String {
+        var newString = ""
+        var stringDic = [Int:String]()
+        for i in 1..<26 {
+            stringDic[i] = String(Character(UnicodeScalar(i+64)!))
+        }
+        stringDic[0] = "Z"
+        stringDic[26] = "Z"
+        var index = n
+        while index > 0 {
+            let c = (index-1)%26
+            newString = stringDic[1+c]!+newString
+            index = (index-1)/26
+        }
+        return newString
+    }
+    func majorityElement(_ nums: [Int]) -> Int {
+        if nums.count == 1 {
+            return nums[0]
+               }
+        var countDic = [Int:Int]()
+        for n in 0..<nums.count {
+            if countDic[nums[n]] == nil {
+                countDic[nums[n]] = 1
+            } else {
+                var count:Int  = countDic[nums[n]]!
+                count = count+1
+                if count > (nums.count/2) {
+                    return nums[n]
+                }
+                countDic[nums[n]] = count
+            }
+            
+        }
+        return 0
+    }
     
+    
+    func titleToNumber(_ s: String) -> Int {
+        var abc = ["A":1,"B":2,"C":3,"D":4,"E":5,"F":6,"G":7,"H":8,"I":9,"J":10,"K":11,"L":12,"M":13,"N":14,"O":15,"P":16,"Q":17,"R":18,"S":19,"T":20,"U":21,"V":22,"W":23,"X":24,"Y":25,"Z":26]
+        var sum = 0
+        for n in 0..<s.count {
+            let c = s.findIndex(n)
+            let val = abc[c]
+            let aa = (pow(26, s.count-1-n) as NSDecimalNumber).intValue
+            sum = sum+aa*val!
+        }
+        
+        return sum
+    }
+    
+    func rotate(_ nums: inout [Int], _ k: Int) {
+        var nums = Array(nums.reversed())
+        nums = reverse(0, k-1, nums)
+        nums = reverse(k-1, nums.count-1, nums)
+    }
+    
+    func reverse(_ start:Int, _ end: Int, _ nums:[Int]) -> [Int]{
+        var start = start
+        var e = end
+        var nums = nums
+        while start < e {
+            let tmp = nums[start]
+            nums[start] = nums[e]
+            nums[e] = tmp
+            start = start+1
+            e = e-1
+        }
+        return nums
+    }
 
 }
 
 class MinStack {
 
-    private var stack : [Int]
-    private var min : Int
-    /** initialize your data structure here. */
-    init() {
-        return self
-    }
+     private var min = Int.max
+      private var _store = [Int]()
+
+      /** initialize your data structure here. */
+      init() {
+          
+      }
+      
+      func push(_ x: Int) {
+         if x <= min {
+             _store.append(min)
+             min = x
+         }
+         _store.append(x)
+      }
+      
+      func pop() {
+          if _store.removeLast() == min { min = _store.removeLast() }
+      }
+      
+      func top() -> Int {
+          guard let last = _store.last else { fatalError() }
+          return last
+      }
+      
+      func getMin() -> Int {
+          return min
+      }
     
-    func push(_ x: Int) {
-        
-    }
     
-    func pop() {
-        
-    }
-    
-    func top() -> Int {
-        
-    }
-    
-    func getMin() -> Int {
-        
-    }
+   
 }
 
 extension String {
@@ -545,5 +636,8 @@ let t6 = TreeNode(2)
 let t7 = TreeNode(3)
 t6.right = t7
 //print(s.minDepth(t6))
-print(s.getRow(4))
-print(s.isPalindrome("A man, a plan, a canal: Panama"))
+//print(s.getRow(4))
+//print(s.isPalindrome("A man, a plan, a canal: Panama"))
+//print(s.convertToTitle(65))
+print(s.convertToTitle(26))
+print(s.titleToNumber("AA"))

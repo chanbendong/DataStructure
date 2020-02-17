@@ -244,6 +244,71 @@ Node *createList(int array[],int len) {
     return head;
 }
 
+struct ListNode *getIntersectionNode(struct ListNode *headA, struct ListNode *headB) {
+    if (headA == NULL || headB == NULL) {
+        return NULL;
+    }
+    struct ListNode *tmpA = headA;
+    struct ListNode *tmpB = headB;
+    
+    struct ListNode *lastA = NULL;
+    struct ListNode *lastB = NULL;
+    while (tmpA != tmpB) {
+        if (tmpB->next == NULL) {
+            lastB = tmpB;
+            tmpB = headA;
+        } else {
+            tmpB = tmpB->next;
+        }
+        
+        if (tmpA->next == NULL) {
+            lastA = tmpA;
+            tmpA = headB;
+        } else {
+             tmpA = tmpA->next;
+        }
+        
+        if (lastA != NULL && lastB != NULL && lastB != lastA) {
+            return NULL;
+        }
+      
+       
+       
+    }
+    return tmpA;
+}
+
+struct ListNode *createListNode(int array[],int len) {
+    struct ListNode *pre = (struct ListNode *)malloc(sizeof(struct ListNode));
+    struct ListNode *head = (struct ListNode *)malloc(sizeof(struct ListNode));
+    for (NSInteger i = 0; i < len; i++) {
+        struct ListNode *node = (struct ListNode *)malloc(sizeof(node));
+        node->val = array[i];
+        pre->next = node;
+        pre = node;
+        if (!i) {
+            head = pre;
+        }
+    }
+    pre->next = NULL;
+    return head;
+}
+int titleToNumber(char * s){
+    char *tmp = s;
+    while (*s)
+    {
+        s++;
+    }
+    long len = s - tmp;
+    int sum = 0;
+    for(int j = 0; j<len;j++) {
+        char c = tmp[j];
+        long val = pow(26, len-j-1)*(c-'A'+1);
+        sum += val;
+    }
+    return sum;
+}
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
@@ -257,6 +322,29 @@ int main(int argc, const char * argv[]) {
 //        mergeTwoSortedList(head, head2);
 //        addTwoNumbers(head, head2);
         reverseLinkList(head);
+        
+        struct ListNode *headA = (struct ListNode *)malloc(sizeof(struct ListNode));
+        headA->val = 4;
+        struct ListNode *headaa = (struct ListNode *)malloc(sizeof(struct ListNode));
+        headaa->val = 33;
+        struct ListNode *head1 = (struct ListNode *)malloc(sizeof(struct ListNode));
+        head1->val = 1;
+        headA->next = headaa;
+        headaa->next = NULL;
+//        headaa->next = head1;
+        struct ListNode *head2 = (struct ListNode *)malloc(sizeof(struct ListNode));
+        head2->val = 2;
+        head1->next = head2;
+        head2->next = NULL;
+        
+        struct ListNode *headB = (struct ListNode *)malloc(sizeof(struct ListNode));
+        headB->val = 5;
+//        headB->next = head1;
+        headB->next = NULL;
+        struct ListNode *intersection = getIntersectionNode(headA, headB);
+        
+        titleToNumber("A");
+        
         NSLog(@"Hello, World!");
     }
     return 0;
