@@ -527,12 +527,16 @@ class Solution {
     }
     
     func rotate(_ nums: inout [Int], _ k: Int) {
-        var nums = Array(nums.reversed())
-        nums = reverse(0, k-1, nums)
-        nums = reverse(k-1, nums.count-1, nums)
+        var k = k
+        if k > nums.count {
+            k = k-nums.count
+        }
+        var ss = Array(nums.reversed())
+        reverse(0, k-1, &ss)
+        reverse(k, ss.count-1, &ss)
     }
     
-    func reverse(_ start:Int, _ end: Int, _ nums:[Int]) -> [Int]{
+    func reverse(_ start:Int, _ end: Int, _ nums: inout [Int]){
         var start = start
         var e = end
         var nums = nums
@@ -543,9 +547,172 @@ class Solution {
             start = start+1
             e = e-1
         }
-        return nums
+        
+        
+    }
+    
+    func rob(_ nums: [Int]) -> Int {
+        if nums.count == 0 {
+            return 0
+        }
+       var dp = [Int]()
+        dp.append(0)
+        dp.append(nums[0])
+        if nums.count>1 {
+            for n in 1..<nums.count {
+                dp.append(max(dp[dp.count-1], dp[dp.count-2]+nums[n]))
+            }
+        }
+        return dp.last!
     }
 
+    
+    func isHappy(_ n: Int) -> Bool {
+        var slow = n
+        var fast = n
+        repeat {
+            slow = bitSpuare(slow)
+            fast = bitSpuare(fast)
+            fast = bitSpuare(fast)
+        } while slow != fast
+        
+        return slow == 1
+    }
+    
+    func bitSpuare(_ n: Int) -> Int {
+        var sum = 0
+        var n = n
+        while n > 0 {
+            let bit = n%10
+            sum = sum+bit*bit
+            n = n/10
+        }
+        return sum
+    }
+    
+    func removeElements(_ head: ListNode?, _ val: Int) -> ListNode? {
+        if head == nil {
+            return nil
+        }
+        var res = ListNode(INTPTR_MAX)
+        var first = res
+        var tmp = head
+        while tmp != nil {
+            if tmp!.val != val {
+                if res.val == INTPTR_MAX {
+                    res = tmp!
+                    first = res
+                } else {
+                    res.next = tmp
+                    res = res.next!
+                }
+            }
+           
+            tmp = tmp!.next
+              
+        }
+        if res.next?.val == val {
+            res.next = nil
+        }
+        return first.val == INTPTR_MAX ? nil : first
+    }
+    
+    func countPrimes(_ n: Int) -> Int {
+        if n == 0 {
+            return 0
+        }
+        if n == 1 {
+            return 0
+        }
+        var count = 0
+        var dic = [Int:Bool]()
+        for i in 2..<n {
+            var j = i*i
+            while j < n {
+                dic[j] = false
+                j = j+i
+            }
+            if dic[i] == nil {
+                count = count+1
+            }
+            
+        }
+        return count
+    }
+    func isIsomorphic(_ s: String, _ t: String) -> Bool {
+       let patternArray = Array(s)
+        let strArray = Array(t)
+        if patternArray.count != strArray.count {
+            return false
+        }
+        var dict: [String: String] = [:]
+        for i in 0..<patternArray.count {
+            let subString = String(patternArray[i])
+            let subString2 = String(strArray[i])
+            if let subStringToValue = dict[subString] {
+                if subStringToValue != subString2 {
+                    return false
+                }
+            } else {
+                if dict.values.contains(subString2) {
+                    return false
+                }
+                dict[subString] = subString2
+            }
+        }
+        return true
+    }
+    
+    func reverseList(_ head: ListNode?) -> ListNode? {
+        if head == nil || head?.next == nil {
+            return head
+        }
+        
+//        var next = head
+//        var pre = ListNode(INTPTR_MAX)
+//        var cur = head
+//        while cur != nil{
+//            next = cur?.next
+//            cur?.next = pre.val == INTPTR_MAX ? nil : pre
+//            pre = cur!
+//            cur = next
+//        }
+        var pre = reverseList(head?.next);
+        head?.next?.next = head
+        head?.next = nil;
+
+      
+        return pre
+    }
+    
+    func containsDuplicate(_ nums: [Int]) -> Bool {
+        var dic = [Int:String]()
+        for n in 0..<nums.count {
+            if  dic[nums[n]] != nil  {
+                return true
+            } else {
+                dic[nums[n]] = "a"
+            }
+        }
+        return false
+    }
+    
+    func containsNearbyDuplicate(_ nums: [Int], _ k: Int) -> Bool {
+        var dic = [Int:Int]()
+        for n in 0..<nums.count {
+         
+                if dic[nums[n]] != nil {
+                   return true
+                }
+                dic[nums[n]] = n
+            if dic.count>k {
+                dic.removeValue(forKey: nums[n-k])
+            }
+            
+        }
+        
+        return false
+    }
 }
 
 class MinStack {
@@ -608,15 +775,22 @@ let s = Solution()
 //print(s.addBinary("11", "1"))
 //print(s.climbStairs(5))
 let h1 = ListNode(1)
-let h2 = ListNode(1)
-let h3 = ListNode(2)
-let h4 = ListNode(3)
-let h5 = ListNode(3)
+let h2 = ListNode(2)
+let h3 = ListNode(3)
+let h4 = ListNode(4)
+let h5 = ListNode(5)
+let h6 = ListNode(6)
+let h7 = ListNode(7)
 h1.next = h2
 h2.next = h3
 h3.next = h4
 h4.next = h5
+h5.next = h6
+h6.next = h7
+//print(s.removeElements(h1, 6))
+print(s.reverseList(h1))
 //print(s.deleteDuplicates(h1))
+print(s.containsNearbyDuplicate([1,0,1,1],1))
 var a1 = [2,0]
 var a2 = [1]
 //print(s.merge(&a1, 1, a2, 1))
@@ -639,5 +813,9 @@ t6.right = t7
 //print(s.getRow(4))
 //print(s.isPalindrome("A man, a plan, a canal: Panama"))
 //print(s.convertToTitle(65))
-print(s.convertToTitle(26))
-print(s.titleToNumber("AA"))
+//print(s.convertToTitle(26))
+//print(s.titleToNumber("AA"))
+var a = [1,2,3,4,5,6,7]
+
+print(s.rotate(&a, 3))
+print(s.isIsomorphic("exg", "boo"))
